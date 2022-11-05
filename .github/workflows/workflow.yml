@@ -5,7 +5,7 @@ on:
     types:
       - opened
     branches:
-      - 'master'
+      - master
 jobs:
   Check-Homework:
     runs-on: ubuntu-latest
