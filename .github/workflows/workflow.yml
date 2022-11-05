@@ -1,0 +1,13 @@
+name: Automated assignment check
+run-name: ${{ GITHUB_ACTOR }} is testing out GitHub Actions 🚀
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'homework/**'
+jobs:
+  Check-Homework:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Testing..."
