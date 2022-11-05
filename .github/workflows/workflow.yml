@@ -6,6 +6,9 @@ on:
       - opened
     branches:
       - master
+  push:
+    branches:
+      - master
 jobs:
   Check-Homework:
     runs-on: ubuntu-latest
