@@ -2,8 +2,6 @@ name: Automated assignment check
 run-name: testing out GitHub Actions 🚀
 on:
   pull_request:
-    types:
-      - opened
     branches:
       - master
   push:
