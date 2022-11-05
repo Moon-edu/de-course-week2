@@ -1,5 +1,5 @@
 name: Automated assignment check
-run-name: testing out GitHub Actions 🚀
+run-name: Your submission is being scored
 on:
   pull_request:
     branches:
