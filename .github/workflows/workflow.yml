@@ -1,5 +1,5 @@
 name: Automated assignment check
-run-name: ${{ GITHUB_ACTOR }} is testing out GitHub Actions 🚀
+run-name: testing out GitHub Actions 🚀
 on:
   pull_request:
     types:
