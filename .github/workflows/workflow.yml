@@ -8,7 +8,7 @@ on:
       - master
   push:
     branches:
-      - homework/**
+      - "*:homework/**"
 jobs:
   Check-Homework:
     runs-on: ubuntu-latest
