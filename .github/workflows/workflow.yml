@@ -8,7 +8,18 @@ on:
     branches:
       - "*:homework/**"
 jobs:
-  Check-Homework:
-    runs-on: ubuntu-latest
+  homework-checker-infra:
+    runs-on: ubuntu-22.04
     steps:
-      - run: echo "Testing..."
+      - run: echo "REF: $GITHUB_REF, REF_NAME: $GITHUB_REF_NAME, HEAD_REF	: $GITHUB_HEAD_REF, REPOSITORY: $GITHUB_REPOSITORY, REPOSITORY_OWNER: $GITHUB_REPOSITORY_OWNER"
+    container: python:3.9.15
+    services:
+      postgres:
+        image: postgres:14.5
+        ports:
+          - 5432:5432
+        environment:
+          POSTGRES_PASSWORD: pg-admin
+          POSTGRES_USER: pg-admin
+          POSTGRES_DB: pytest
+        restart: always
