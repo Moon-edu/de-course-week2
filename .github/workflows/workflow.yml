@@ -11,4 +11,4 @@ jobs:
   homework-checker-infra:
     runs-on: ubuntu-22.04
     steps:
-      - run: echo "REF: $GITHUB_REF, REF_NAME: $GITHUB_REF_NAME, HEAD_REF	: $GITHUB_HEAD_REF, REPOSITORY: $GITHUB_REPOSITORY, REPOSITORY_OWNER: $GITHUB_REPOSITORY_OWNER"
+      - run: "echo 'REF: $GITHUB_REF, REF_NAME: $GITHUB_REF_NAME'"
