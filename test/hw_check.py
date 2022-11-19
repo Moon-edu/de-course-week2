@@ -1,18 +1,26 @@
 import pytest
-from score.criteria import Q1Score
+from score.criteria import *
 import logging
 from util import dbutil
+import base64
 
 
-@pytest.fixture(autouse=True)
 def drop_schema_if_exist():
     logging.info("DROP schema public")
     dbutil.execute_sql(f"drop schema if exists public CASCADE")
     logging.info("Dropped schema, creating schema")
     dbutil.execute_sql(f"create schema if not exists public")
 
+def create_tables():
+    dbutil.execute_sql(base64.b64decode("Y3JlYXRlIHRhYmxlIGVtcGxveWVlKAoJZW1wX2lkIHZhcmNoYXIoMTApIHVuaXF1ZSBub3Qgbn"
+    + "VsbCwKCWdlbmRlciB2YXJjaGFyKDEwKSBub3QgbnVsbCwKCW5hbWUgdmFyY2hhcigyMCkgbm90IG51bGwsCglhZGRyZXNzIHZhcmNoYXIoMTAwK"
+    + "SBudWxsLAoJZGVwYXJ0bWVudCBzbWFsbGludCBudWxsLAoJbWFuYWdlciB2YXJjaGFyKDEwMCkgbnVsbCwKCWFnZSBpbnQgbm90IG51bGwsCglwb"
+    + "3NpdGlvbiB2YXJjaGFyKDIwMCkgbnVsbAop"))
 
-def test_sql(drop_schema_if_exist):
+    dbutil.execute_sql(base64.b64decode("Y3JlYXRlIHRhYmxlIHZpc2l0X2xvZygKCXZpc2l0b3IgdmFyY2hhcig2KSBudWxsLAoJZW50ZXIgd"
+    + "GltZXN0YW1wIG5vdCBudWxsLAoJb3V0IHRpbWVzdGFtcCwKCXB1cnBvc2UgdmFyY2hhcig1MCkKKQ=="))
+
+def test_sql():
     # sql_files = [
     #     Q1Score("q1_create_employee_table", 10),
     #     ("q2_insert_employee_table", 5),
@@ -27,7 +35,11 @@ def test_sql(drop_schema_if_exist):
     #     ("q11_delete_null_visit", 10)
     # ]
 
-    print(f"""Score {Q1Score("q1_create_employee_table", 10, "employee").score()}""")
+    drop_schema_if_exist()
+    create_tables()
+    my_score = Q4Score().score()
+
+    print(f"""Score {my_score}""")
     # with open("homework/q1_create_employee_table.sql", "r") as f:
     #     query = f.read()
     #     try:

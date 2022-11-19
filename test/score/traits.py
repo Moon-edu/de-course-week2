@@ -122,6 +122,11 @@ class CreateTableProblem(HwScore):
 
     def score(self) -> int:
         try:
+            dbutil.execute_sql("DROP table if exists employee")
+        except Exception:
+            logging.exception("Can't drop table employee")
+
+        try:
             logging.info("Reading query file from %s", self.filename)
             query = self._read_query()
             if not query:
@@ -167,3 +172,46 @@ class CreateTableProblem(HwScore):
                 logging.warning(err_msg)
                 return 0
         return self.max_score
+
+
+class InsertRecordProblem(HwScore):
+    def __init__(self, filename: str, max_score: int, table_name: str):
+        super().__init__(filename, max_score)
+        self.table_name = table_name
+
+    @abstractmethod
+    def get_expected_data(self) -> list:
+        pass
+
+    @abstractmethod
+    def order_by_col(self) -> str:
+        pass
+
+    def score(self) -> int:
+        try:
+            logging.info("Reading query file from %s", self.filename)
+            query = self._read_query()
+            if not query:
+                logging.warning("Query file %s is empty", self.filename)
+                return 0
+        except Exception:
+            logging.exception("Failed to read query file %s", self.filename)
+            return 0
+        try:
+            logging.info("Executing query in file %s. query: %s", self.filename, query)
+            dbutil.execute_sql(query)
+
+            logging.info("Executed query: %s", query)
+        except Exception:
+            logging.exception("Failed to execute query %s in file %s", query, self.filename)
+            return 0
+
+        actual = dbutil.fetch_all(f"select * from {self.table_name} order by {self.order_by_col()}", ())
+        expected = self.get_expected_data()
+
+        logging.info("Validating data")
+        if (actual == expected):
+            return self.max_score
+        else:
+            logging.warning("Insert 후 결과 값이 예상 값이 아닙니다. %s", actual)
+            return 0
