@@ -1,6 +1,6 @@
-from score.traits import CreateTableProblem, InsertRecordProblem, ValidationRule, AndValidationRule, OrValidationRule
-from typing import List, Tuple
-from datetime import datetime
+from score.traits import CreateTableProblem, ModifyRecordProblem, SelectRecordProblem, ValidationRule, AndValidationRule, OrValidationRule
+from typing import List, Tuple, Any
+from data.all_data import ALL_EMPLOYEE, ALL_VISIT_LOG
 
 
 class Q1Score(CreateTableProblem):
@@ -98,7 +98,7 @@ class Q1Score(CreateTableProblem):
         ]
 
 
-class Q2Score(InsertRecordProblem):
+class Q2Score(ModifyRecordProblem):
     def __init__(self):
         super().__init__("q2_insert_employee_table", 5, "employee")
 
@@ -106,16 +106,7 @@ class Q2Score(InsertRecordProblem):
         return "emp_id"
 
     def get_expected_data(self) -> list:
-        return [
-            ("A00001", "Male", "Moon", "10-199, Gang-nam, Seoul", 1, "C00001", 30, "Senior engineer"),
-            ("A08771", "Others", "Peach", "203-3, Guro, Seoul", 1, "C00001", 26, "Junior engineer"),
-            ("B00100", "Female", "Sun", "587/8, Gwan-ak, Seoul", 2, "B00102", 25, "Associate marketer"),
-            ("B00102", "Female", "Ran", "290-10, Gwanghwamun, Seoul", 2, "C00000", 45, "Director"),
-            ("C00000", "Male", "K", "1010, Sung-soo, Seoul", None, None, 51, "CEO"),
-            ("C00001", "Male", "Lion", "53-3, Namyang-ju, Gyonghi", 1, "C00000", 55, "CTO"),
-            ("C00002", "Others", "Cindy", "100, Jong-ro, Seoul", 3, "C00000", 52, "Director"),
-            ("C00129", "Male", "Alex", "20-331, Bundang, Gyonggi", 3, "C00002", 40, "Director")
-        ]
+        return ALL_EMPLOYEE
 
 class Q3Score(CreateTableProblem):
     def __init__(self):
@@ -185,7 +176,7 @@ class Q3Score(CreateTableProblem):
         ]
 
 
-class Q4Score(InsertRecordProblem):
+class Q4Score(ModifyRecordProblem):
     def __init__(self):
         super().__init__("q4_insert_visit_log_table", 5, "visit_log")
 
@@ -193,48 +184,99 @@ class Q4Score(InsertRecordProblem):
         return "coalesce(visitor, ''), enter"
 
     def get_expected_data(self) -> list:
+        return ALL_VISIT_LOG
+
+
+class Q5Score(SelectRecordProblem):
+    def __init__(self):
+        super().__init__("q5_employee_female", 10)
+
+    def sort_actual(self, actual: Any) -> Any:
+        actual.sort(key=lambda e: e[0])
+        return actual
+
+    def get_expected_data(self) -> list:
         return [
-            (None, datetime.strptime('2022-07-11 12:30:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-11 14:45:00', '%Y-%m-%d %H:%M:%S'), 'meeting'),
-            (None, datetime.strptime('2022-07-12 15:20:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-12 16:50:00', '%Y-%m-%d %H:%M:%S'), 'visit family'),
-            ('A00001', datetime.strptime('2022-07-11 11:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-11 18:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('A00001', datetime.strptime('2022-07-12 08:15:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-12 17:56:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('A00001', datetime.strptime('2022-07-13 09:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-13 18:20:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('A00001', datetime.strptime('2022-07-14 08:30:00', '%Y-%m-%d %H:%M:%S'), None, 'work'),
-            ('A08771', datetime.strptime('2022-07-11 09:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-11 17:56:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('A08771', datetime.strptime('2022-07-12 09:20:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-12 18:20:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('A08771', datetime.strptime('2022-07-13 09:20:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-13 18:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('A08771', datetime.strptime('2022-07-14 08:30:00', '%Y-%m-%d %H:%M:%S'), None, 'work'),
-            ('B00100', datetime.strptime('2022-07-11 10:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-11 19:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('B00100', datetime.strptime('2022-07-12 08:30:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-12 19:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('B00100', datetime.strptime('2022-07-13 08:30:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-13 18:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('B00100', datetime.strptime('2022-07-14 08:30:00', '%Y-%m-%d %H:%M:%S'), None, 'work'),
-            ('C00001', datetime.strptime('2022-07-11 09:20:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-11 18:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00001', datetime.strptime('2022-07-12 10:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-12 18:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00001', datetime.strptime('2022-07-13 09:20:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-13 18:20:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00002', datetime.strptime('2022-07-11 09:30:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-11 18:20:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00002', datetime.strptime('2022-07-12 09:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-12 17:56:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00002', datetime.strptime('2022-07-13 08:15:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-13 17:56:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00129', datetime.strptime('2022-07-11 09:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-11 18:20:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00129', datetime.strptime('2022-07-12 10:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-12 18:00:00', '%Y-%m-%d %H:%M:%S'), 'work'),
-            ('C00129', datetime.strptime('2022-07-13 10:00:00', '%Y-%m-%d %H:%M:%S'),
-             datetime.strptime('2022-07-13 18:00:00', '%Y-%m-%d %H:%M:%S'), 'work')
+            (25, "Associate marketer"),
+            (45, "Director")
         ]
+
+
+class Q6Score(SelectRecordProblem):
+    def __init__(self):
+        super().__init__("q6_employee_male", 10)
+
+    def sort_actual(self, actual: Any) -> Any:
+        return actual  # No sort
+
+    def get_expected_data(self) -> list:
+        return [
+            ("Lion", 55, "CTO"),
+            ("K", 51, "CEO"),
+            ("Alex", 40, "Director"),
+            ("Moon", 30, "Senior engineer")
+        ]
+
+# TODO: if student assume enter is varchar, may use substr instead of gt/lt/between
+class Q7Score(SelectRecordProblem):
+    def __init__(self):
+        super().__init__("q7_visit_log_cnt", 10)
+
+    def sort_actual(self, actual: Any) -> Any:
+        return actual  # No sort
+
+    def get_expected_data(self) -> list:
+        return [(7,)]
+
+
+class Q8Score(SelectRecordProblem):
+    def __init__(self):
+        super().__init__("q8_visit_log_group_by_purpose_cnt", 10)
+
+    def sort_actual(self, actual: Any) -> Any:
+        actual.sort(key=lambda e: e[0])  # sort by purpose
+        return actual  # No sort
+
+    def get_expected_data(self) -> list:
+        return [
+            ("meeting", 1),
+            ("visit family", 1),
+            ("work", 21)
+        ]
+
+
+class Q9Score(SelectRecordProblem):
+    def __init__(self):
+        super().__init__("q9_find_visit_employee", 10)
+
+    def sort_actual(self, actual: Any) -> Any:
+        actual.sort(key=lambda e: e[2])  # sort by emp_id
+        return actual  # No sort
+
+    def get_expected_data(self) -> list:
+        return [
+            ("Peach", 1, "A08771"),
+            ("Alex", 3, "C00129")
+        ]
+
+
+class Q10Score(ModifyRecordProblem):
+    def __init__(self):
+        super().__init__("q10_update_peach_position", 10, "employee", False)
+
+    def order_by_col(self):
+        return "emp_id"
+
+    def get_expected_data(self) -> list:
+        return list(map(lambda e: ("A08771", "Others", "Peach", "203-3, Guro, Seoul", 1, "C00001", 26, "Senior engineer") if e[2] == "Peach" else e, ALL_EMPLOYEE))
+
+
+class Q11Score(ModifyRecordProblem):
+    def __init__(self):
+        super().__init__("q11_delete_null_visit", 10, "visit_log", False)
+
+    def order_by_col(self):
+        return "visitor"
+
+    def get_expected_data(self) -> list:
+        return list(filter(lambda e: e[0] is not None, ALL_VISIT_LOG))

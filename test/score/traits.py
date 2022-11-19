@@ -125,6 +125,7 @@ class CreateTableProblem(HwScore):
             dbutil.execute_sql("DROP table if exists employee")
         except Exception:
             logging.exception("Can't drop table employee")
+            return 0
 
         try:
             logging.info("Reading query file from %s", self.filename)
@@ -174,10 +175,11 @@ class CreateTableProblem(HwScore):
         return self.max_score
 
 
-class InsertRecordProblem(HwScore):
-    def __init__(self, filename: str, max_score: int, table_name: str):
+class ModifyRecordProblem(HwScore):
+    def __init__(self, filename: str, max_score: int, table_name: str, truncate=True):
         super().__init__(filename, max_score)
         self.table_name = table_name
+        self.truncate = truncate
 
     @abstractmethod
     def get_expected_data(self) -> list:
@@ -188,6 +190,12 @@ class InsertRecordProblem(HwScore):
         pass
 
     def score(self) -> int:
+        if self.truncate:
+            try:
+                dbutil.execute_sql(f"TRUNCATE table {self.table_name}")
+            except Exception:
+                logging.exception(f"Can't truncate table {self.table_name}")
+                return 0
         try:
             logging.info("Reading query file from %s", self.filename)
             query = self._read_query()
@@ -210,8 +218,49 @@ class InsertRecordProblem(HwScore):
         expected = self.get_expected_data()
 
         logging.info("Validating data")
-        if (actual == expected):
+        if actual == expected:
             return self.max_score
         else:
-            logging.warning("Insert 후 결과 값이 예상 값이 아닙니다. %s", actual)
+            logging.warning("Insert 후 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
+            return 0
+
+
+class SelectRecordProblem(HwScore):
+    def __init__(self, filename: str, max_score: int):
+        super().__init__(filename, max_score)
+
+    @abstractmethod
+    def get_expected_data(self) -> list:
+        pass
+
+    @abstractmethod
+    def sort_actual(self, actual: Any) -> Any:
+        pass
+    def score(self) -> int:
+        try:
+            logging.info("Reading query file from %s", self.filename)
+            query = self._read_query()
+            if not query:
+                logging.warning("Query file %s is empty", self.filename)
+                return 0
+        except Exception:
+            logging.exception("Failed to read query file %s", self.filename)
+            return 0
+        try:
+            logging.info("Executing query in file %s. query: %s", self.filename, query)
+            actual = dbutil.fetch_all(query, ())
+            actual_sorted = self.sort_actual(actual)
+
+            logging.info("Executed query: %s", query)
+        except Exception:
+            logging.exception("Failed to execute query %s in file %s", query, self.filename)
+            return 0
+
+        expected = self.get_expected_data()
+
+        logging.info("Validating data")
+        if actual_sorted == expected:
+            return self.max_score
+        else:
+            logging.warning("Query 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
             return 0

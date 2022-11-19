@@ -3,6 +3,7 @@ from score.criteria import *
 import logging
 from util import dbutil
 import base64
+from data.all_data import ALL_EMPLOYEE, ALL_VISIT_LOG
 
 
 def drop_schema_if_exist():
@@ -19,6 +20,14 @@ def create_tables():
 
     dbutil.execute_sql(base64.b64decode("Y3JlYXRlIHRhYmxlIHZpc2l0X2xvZygKCXZpc2l0b3IgdmFyY2hhcig2KSBudWxsLAoJZW50ZXIgd"
     + "GltZXN0YW1wIG5vdCBudWxsLAoJb3V0IHRpbWVzdGFtcCwKCXB1cnBvc2UgdmFyY2hhcig1MCkKKQ=="))
+
+def insert_data():
+    for e in ALL_EMPLOYEE:
+        dbutil.execute_sql(base64.b64decode("SU5TRVJUIElOVE8gZW1wbG95ZWUgdmFsdWVzKCVzLCAlcywgJXMsICVzLCAlcywgJXMsICVz"
+                                        + "LCAlcyk="), e)
+    for v in ALL_VISIT_LOG:
+        dbutil.execute_sql(base64.b64decode("SU5TRVJUIElOVE8gdmlzaXRfbG9nIHZhbHVlcyglcywgJXMsICVzLCAlcyk="), v)
+
 
 def test_sql():
     # sql_files = [
@@ -37,7 +46,8 @@ def test_sql():
 
     drop_schema_if_exist()
     create_tables()
-    my_score = Q4Score().score()
+    insert_data()
+    my_score = Q11Score().score()
 
     print(f"""Score {my_score}""")
     # with open("homework/q1_create_employee_table.sql", "r") as f:
