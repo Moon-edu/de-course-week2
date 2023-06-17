@@ -172,16 +172,16 @@ class ModifyRecordProblem(HwScore):
                 dbutil.execute_sql(f"TRUNCATE table {self.table_name}")
             except Exception:
                 logging.exception(f"Can't truncate table {self.table_name}")
-                return 0
+                raise Exception(f"Can't truncate table {self.table_name}")
         try:
             logging.info("Reading query file from %s", self.filename)
             query = self._read_query()
             if not query:
                 logging.warning("Query file %s is empty", self.filename)
-                return 0
+                raise Exception(f"Query file {self.filename} is empty")
         except Exception:
             logging.exception("Failed to read query file %s", self.filename)
-            return 0
+            raise Exception(f"Failed to read query file {self.filename}")
         try:
             logging.info("Executing query in file %s. query: %s", self.filename, query)
             dbutil.execute_sql(query)
@@ -189,7 +189,7 @@ class ModifyRecordProblem(HwScore):
             logging.info("Executed query: %s", query)
         except Exception:
             logging.exception("Failed to execute query %s in file %s", query, self.filename)
-            return 0
+            raise Exception(f"Failed to execute query {query} in file {self.filename}")
 
         actual = dbutil.fetch_all(f"select * from {self.table_name} order by {self.order_by_col()}", ())
         expected = self.get_expected_data()
@@ -199,7 +199,7 @@ class ModifyRecordProblem(HwScore):
             return self.max_score
         else:
             logging.warning("Insert 후 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
-            return 0
+            raise Exception(f"Insert 후 결과 값이 예상 값이 아닙니다. Expected {expected}, Actual {actual}")
 
 
 class SelectRecordProblem(HwScore):
