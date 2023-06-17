@@ -1,11 +1,11 @@
-from score.traits import CreateTableProblem, ModifyRecordProblem, SelectRecordProblem, ValidationRule, AndValidationRule, OrValidationRule
+from tests.score.traits import CreateTableProblem, ModifyRecordProblem, SelectRecordProblem, ValidationRule, AndValidationRule, OrValidationRule
 from typing import List, Tuple, Any
-from data.all_data import ALL_EMPLOYEE, ALL_VISIT_LOG
+from tests.data.all_data import ALL_EMPLOYEE, ALL_VISIT_LOG
 
 
 class Q1Score(CreateTableProblem):
     def __init__(self):
-        super().__init("q1_create_employee_table", 10, "employee")
+        super().__init__("q1_create_employee_table", 10, "employee")
 
     def get_rules(self) -> List[Tuple[str, ValidationRule]]:
         return [

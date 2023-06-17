@@ -20,3 +20,8 @@ def fetch_all(query: str, param: Tuple):
         with conn.cursor() as cur:
             cur.execute(query, param)
             return cur.fetchall()
+
+
+def check_table_exists(table_name):
+    query = f"select exists(select * from information_schema.tables where table_name=%s)"
+    return fetch_all(query, (table_name, ))[0][0]

@@ -122,37 +122,14 @@ class CreateTableProblem(HwScore):
 
     def score(self) -> int:
         try:
-            dbutil.execute_sql("DROP table if exists employee")
-        except Exception:
-            logging.exception("Can't drop table employee")
-            return 0
-
-        try:
-            logging.info("Reading query file from %s", self.filename)
-            query = self._read_query()
-            if not query:
-                logging.warning("Query file %s is empty", self.filename)
-                return 0
-        except Exception:
-            logging.exception("Failed to read query file %s", self.filename)
-            return 0
-        try:
-            logging.info("Executing query in file %s. query: %s", self.filename, query)
-            dbutil.execute_sql(query)
-
-            logging.info("Executed query: %s", query)
-        except Exception:
-            logging.exception("Failed to execute query %s in file %s", query, self.filename)
-            return 0
-        try:
             if not self._is_table_exist():
                 logging.warning("Table %s not found", self.table_name)
                 return 0
             logging.info("Table %s found, continue...", self.table_name)
 
-        except Exception:
+        except Exception as e:
             logging.exception("Failed to check table %s exists", self.table_name)
-            return 0
+            raise e
         try:
             # Validating table
             logging.info("Verifying table %s ...", self.table_name)
@@ -160,18 +137,18 @@ class CreateTableProblem(HwScore):
 
         except Exception as e:
             logging.exception("Fail to get column info")
-            return 0
+            raise e
 
         logging.info("Validating table definition")
         rules = self.get_rules()
         for col_name, rule in rules:
             if col_name not in columns_dict:
                 logging.info("""No column "%s" in table %s""", col_name, self.table_name)
-                return 0
+                raise Exception("""No column "%s" in table %s""", col_name, self.table_name)
             result, err_msg = rule.verify(columns_dict[col_name])
             if not result:
                 logging.warning(err_msg)
-                return 0
+                raise Exception(err_msg)
         return self.max_score
 
 
