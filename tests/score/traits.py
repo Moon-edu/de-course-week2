@@ -124,7 +124,7 @@ class CreateTableProblem(HwScore):
         try:
             if not self._is_table_exist():
                 logging.warning("Table %s not found", self.table_name)
-                return 0
+                raise Exception("Table %s not found", self.table_name)
             logging.info("Table %s found, continue...", self.table_name)
 
         except Exception as e:
