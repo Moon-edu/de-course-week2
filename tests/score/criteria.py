@@ -26,20 +26,22 @@ class Q1Score(CreateTableProblem):
                 OrValidationRule([
                     # If char / varchar
                     AndValidationRule([
-                        lambda c: (c.dtype in ["character", "character varying", "text"], """
-                            gender column은 Male, Female, Others를 표현하기 위해 최소 6자 길이의 char 혹은 varchar가 되어야 합니다.
-                            text도 정답으로 처리하지만 6자리 문자를 표현하기 위해 권장되는 타입은 아닙니다.
-                        """),
-                        lambda c: ((c.dtype == "text" or (c.char_max_len and c.char_max_len >= 6)), """
-                            gender column은 Male, Female, Others를 표현하기 위해 최소 6자 길이의 char 혹은 varchar가 되어야 합니다.
-                            text도 정답으로 처리하지만 6자리 문자를 표현하기 위해 권장되는 타입은 아닙니다.
-                        """),
+                        lambda c: (c.dtype in ["character", "character varying", "text"],
+                            "gender column은 Male, Female, Others를 표현하기 위해 최소 6자 길이의 char 혹은 varchar가 되어야 "
+                                   + "합니다."),
+                        lambda c: (c.char_max_len and c.char_max_len >= 6,
+                                   "Female, Others를 표현하기 위해 최소 6자 길이의 char 혹은 varchar가 되어야 합니다.")
                     ]),
+                    # If text
+                    lambda c: ((c.dtype == "text" or (c.char_max_len and c.char_max_len >= 6)),
+                               "gender column은 text일 수도 있습니다. 다만 6자리 문자를 표현하기 위해 권장되는 타입은 아닙니다."
+                               ),
                     # If Enum type
                     AndValidationRule([
-                        lambda c: (c.dtype == "user-defined", "gender는 enum타입일 수 있습니다"),
+                        lambda c: (c.dtype == "user-defined",
+                                   "gender는 enum타입일 수 있는데 이 때 enum의 값은 Female, Male, Others여야 합니다."),
                         lambda c: (self._get_enum_value_of_cols(c.udt_name) == ["Female", "Male", "Others"],
-                                   """gender column이 enum일 경우 Female, Male, Others만 허용해야 합니다. 대소문자도 제대로 맞추어야 합니다.""")
+                                   "gender는 enum타입일 수 있는데 이 때 enum의 값은 Female, Male, Others여야 합니다.")
                     ])
                 ])
             ])),
