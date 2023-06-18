@@ -204,15 +204,19 @@ class ModifyRecordProblem(HwScore):
         logging.info("Validating data")
 
         # Remove padding spaces for char(n) column
-        sanitized_actual = []
-        for i, e in enumerate(actual):
-            sanitized_actual.append(tuple([_sanitize_column_value(x) for x in e]))
+        sanitized_actual = _sanitize_columns(actual)
 
         if sanitized_actual == expected:
             return self.max_score
         else:
             logging.warning("Insert 후 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
             raise Exception(f"Insert 후 결과 값이 예상 값이 아닙니다. Expected {expected}, Actual {actual}")
+
+def _sanitize_columns(values: list[Tuple]) -> Tuple:
+    return [_sanitize_column_values(x) for x in values]
+
+def _sanitize_column_values(value: Tuple) -> Tuple:
+    return tuple([_sanitize_column_value(x) for x in value])
 
 def _sanitize_column_value(value: Any) -> Any:
     if isinstance(value, str):
@@ -240,27 +244,29 @@ class SelectRecordProblem(HwScore):
         try:
             logging.info("Reading query file from %s", self.filename)
             query = self._read_query()
-            if not query:
-                logging.warning("Query file %s is empty", self.filename)
-                return 0
-        except Exception:
+        except Exception as e:
             logging.exception("Failed to read query file %s", self.filename)
-            return 0
+            raise e
+
+        if not query:
+            logging.warning("Query file %s is empty", self.filename)
+            raise Exception(f"Query file {self.filename} is empty")
         try:
             logging.info("Executing query in file %s. query: %s", self.filename, query)
             actual = dbutil.fetch_all(query, ())
             actual_sorted = self.sort_actual(actual)
 
             logging.info("Executed query: %s", query)
-        except Exception:
+        except Exception as e:
             logging.exception("Failed to execute query %s in file %s", query, self.filename)
-            return 0
+            raise e
 
         expected = self.get_expected_data()
 
+        sanitized_actual = _sanitize_columns(actual_sorted)
         logging.info("Validating data")
-        if actual_sorted == expected:
+        if sanitized_actual == expected:
             return self.max_score
         else:
             logging.warning("Query 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
-            return 0
+            raise Exception(f"Query 결과 값이 예상 값이 아닙니다. Expected {expected}, Actual {actual}")
