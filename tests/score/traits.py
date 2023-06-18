@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List, Set, Any, Callable, Dict
 import logging
-from datastructure import ColumnMeta
-from util import dbutil
+from tests.datastructure import ColumnMeta
+from tests.util import dbutil
 
 
 class ValidationRule:
@@ -22,12 +22,15 @@ class ValidationRule:
 class OrValidationRule(ValidationRule):
     def verify(self, v: Any) -> Tuple[bool, str]:
         """Return true if any of rules return true, false otherwise"""
+        err_strs = []
         for f in self.rules:
             r = f.verify(v) if isinstance(f, ValidationRule) else f(v)
             is_valid, err_str = r
             if is_valid:
                 return (True, None)
-        return (False, err_str)
+            else:
+                err_strs.append(err_str)
+        return (False, f"""다음 중 하나는 참이어야 합니다. ({",".join(err_strs)})""")
 
     def __repr__(self):
         return f"""OR of multiple rules, Num of Rule {len(self.rules)}"""
@@ -176,12 +179,14 @@ class ModifyRecordProblem(HwScore):
         try:
             logging.info("Reading query file from %s", self.filename)
             query = self._read_query()
-            if not query:
-                logging.warning("Query file %s is empty", self.filename)
-                raise Exception(f"Query file {self.filename} is empty")
         except Exception:
             logging.exception("Failed to read query file %s", self.filename)
             raise Exception(f"Failed to read query file {self.filename}")
+
+        if not query:
+            logging.warning("Query file %s is empty", self.filename)
+            raise Exception(f"Query file {self.filename} is empty")
+
         try:
             logging.info("Executing query in file %s. query: %s", self.filename, query)
             dbutil.execute_sql(query)
@@ -195,7 +200,13 @@ class ModifyRecordProblem(HwScore):
         expected = self.get_expected_data()
 
         logging.info("Validating data")
-        if actual == expected:
+
+        # Remove padding spaces for char(n) column
+        sanitized_actual = []
+        for i, e in enumerate(actual):
+            sanitized_actual.append(tuple([x.strip() if isinstance(x, str) else x for x in e]))
+
+        if sanitized_actual == expected:
             return self.max_score
         else:
             logging.warning("Insert 후 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
