@@ -53,13 +53,8 @@ class AndValidationRule(ValidationRule):
 
 
 class HwScore(ABC):
-    def __init__(self, filename, max_score):
-        self.filename = filename
+    def __init__(self, max_score):
         self.max_score = max_score
-
-    def _read_query(self) -> str:
-        with open(f"homework/{self.filename}.sql", "r") as f:
-            return f.read().strip()
 
     @abstractmethod
     def score(self) -> int:
@@ -67,8 +62,8 @@ class HwScore(ABC):
 
 
 class CreateTableProblem(HwScore):
-    def __init__(self, filename: str, max_score: int, table_name: str):
-        super().__init__(filename, max_score)
+    def __init__(self, max_score: int, table_name: str):
+        super().__init__(max_score)
         self.table_name = table_name
 
     @abstractmethod
@@ -158,8 +153,8 @@ class CreateTableProblem(HwScore):
 
 
 class ModifyRecordProblem(HwScore):
-    def __init__(self, filename: str, max_score: int, table_name: str, truncate=True):
-        super().__init__(filename, max_score)
+    def __init__(self, max_score: int, table_name: str, truncate=True):
+        super().__init__(max_score)
         self.table_name = table_name
         self.truncate = truncate
 
@@ -172,32 +167,6 @@ class ModifyRecordProblem(HwScore):
         pass
 
     def score(self) -> int:
-        if self.truncate:
-            try:
-                dbutil.execute_sql(f"TRUNCATE table {self.table_name}")
-            except Exception:
-                logging.exception(f"Can't truncate table {self.table_name}")
-                raise Exception(f"Can't truncate table {self.table_name}")
-        try:
-            logging.info("Reading query file from %s", self.filename)
-            query = self._read_query()
-        except Exception:
-            logging.exception("Failed to read query file %s", self.filename)
-            raise Exception(f"Failed to read query file {self.filename}")
-
-        if not query:
-            logging.warning("Query file %s is empty", self.filename)
-            raise Exception(f"Query file {self.filename} is empty")
-
-        try:
-            logging.info("Executing query in file %s. query: %s", self.filename, query)
-            dbutil.execute_sql(query)
-
-            logging.info("Executed query: %s", query)
-        except Exception:
-            logging.exception("Failed to execute query %s in file %s", query, self.filename)
-            raise Exception(f"Failed to execute query {query} in file {self.filename}")
-
         actual = dbutil.fetch_all(f"select * from {self.table_name} order by {self.order_by_col()}", ())
         expected = self.get_expected_data()
 
@@ -230,8 +199,9 @@ def _sanitize_column_value(value: Any) -> Any:
 
 
 class SelectRecordProblem(HwScore):
-    def __init__(self, filename: str, max_score: int):
-        super().__init__(filename, max_score)
+    def __init__(self, actual: Any, max_score: int):
+        super().__init__(max_score)
+        self.actual = actual
 
     @abstractmethod
     def get_expected_data(self) -> list:
@@ -240,33 +210,18 @@ class SelectRecordProblem(HwScore):
     @abstractmethod
     def sort_actual(self, actual: Any) -> Any:
         pass
+
     def score(self) -> int:
-        try:
-            logging.info("Reading query file from %s", self.filename)
-            query = self._read_query()
-        except Exception as e:
-            logging.exception("Failed to read query file %s", self.filename)
-            raise e
-
-        if not query:
-            logging.warning("Query file %s is empty", self.filename)
-            raise Exception(f"Query file {self.filename} is empty")
-        try:
-            logging.info("Executing query in file %s. query: %s", self.filename, query)
-            actual = dbutil.fetch_all(query, ())
-            actual_sorted = self.sort_actual(actual)
-
-            logging.info("Executed query: %s", query)
-        except Exception as e:
-            logging.exception("Failed to execute query %s in file %s", query, self.filename)
-            raise e
+        if isinstance(self.actual, list):
+            self.sort_actual(self.actual)
+            self.actual = _sanitize_columns(self.actual)
 
         expected = self.get_expected_data()
 
-        sanitized_actual = _sanitize_columns(actual_sorted)
+
         logging.info("Validating data")
-        if sanitized_actual == expected:
+        if self.actual == expected:
             return self.max_score
         else:
-            logging.warning("Query 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
-            raise Exception(f"Query 결과 값이 예상 값이 아닙니다. Expected {expected}, Actual {actual}")
+            logging.warning("Query 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, self.actual)
+            raise Exception(f"Query 결과 값이 예상 값이 아닙니다. Expected {expected}, Actual {self.actual}")

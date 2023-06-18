@@ -15,7 +15,7 @@ def execute_sql(query: str, param: Tuple = ()):
         conn.commit()
 
 
-def fetch_all(query: str, param: Tuple):
+def fetch_all(query: str, param: Tuple = ()) -> list:
     with psycopg.connect(f"host={DB_HOST} dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD}") as conn:
         with conn.cursor() as cur:
             cur.execute(query, param)

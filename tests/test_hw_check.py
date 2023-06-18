@@ -5,12 +5,15 @@ from tests.score.criteria import *
 from util.dbutil import *
 
 
-def execute_sql_file(filename):
+def execute_sql_file(filename, return_result=False):
     with open(f"homework/{filename}.sql", "r") as f:
         query = f.read()
         try:
             logging.info(f"Executing: {query}")
-            execute_sql(query)
+            if return_result:
+                return fetch_all(query)
+            else:
+                return execute_sql(query)
         except Exception as e:
             logging.error(e)
             raise e
@@ -85,39 +88,39 @@ def test_create_visit_logs(drop_schema_if_exist, create_schema_if_not_exist, cre
 
 
 def test_female_employee(drop_schema_if_exist, create_schema_if_not_exist, create_employee_table, prepare_employees):
-    execute_sql_file("q5_employee_female")
+    actual = execute_sql_file("q5_employee_female", True)
 
-    score = Q5Score().score()
+    score = Q5Score(actual).score()
     logging.info(f"Q5 Score: {score}")
 
 
 def test_male_employee(drop_schema_if_exist, create_schema_if_not_exist, create_employee_table, prepare_employees):
-    execute_sql_file("q6_employee_male")
+    actual = execute_sql_file("q6_employee_male", True)
 
-    score = Q6Score().score()
+    score = Q6Score(actual).score()
     logging.info(f"Q6 Score: {score}")
 
 
 def test_cnt_visit_log(drop_schema_if_exist, create_schema_if_not_exist, create_visit_log_table, prepare_visit_logs):
-    execute_sql_file("q7_visit_log_cnt")
+    actual = execute_sql_file("q7_visit_log_cnt", True)
 
-    score = Q7Score().score()
+    score = Q7Score(actual).score()
     logging.info(f"Q7 Score: {score}")
 
 
 def test_group_by_visit_log_purpose(drop_schema_if_exist, create_schema_if_not_exist, create_visit_log_table,
                                     prepare_visit_logs):
-    execute_sql_file("q8_visit_log_group_by_purpose_cnt")
+    actual = execute_sql_file("q8_visit_log_group_by_purpose_cnt", True)
 
-    score = Q8Score().score()
+    score = Q8Score(actual).score()
     logging.info(f"Q8 Score: {score}")
 
 
 def test_find_visit_employee(drop_schema_if_exist, create_schema_if_not_exist, create_employee_table,
                              prepare_employees, create_visit_log_table, prepare_visit_logs):
-    execute_sql_file("q9_find_visit_employee")
+    actual = execute_sql_file("q9_find_visit_employee", True)
 
-    score = Q9Score().score()
+    score = Q9Score(actual).score()
     logging.info(f"Q9 Score: {score}")
 
 

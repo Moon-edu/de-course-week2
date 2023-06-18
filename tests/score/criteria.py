@@ -5,7 +5,7 @@ from tests.data.all_data import ALL_EMPLOYEE, ALL_VISIT_LOG
 
 class Q1Score(CreateTableProblem):
     def __init__(self):
-        super().__init__("q1_create_employee_table", 10, "employee")
+        super().__init__(10, "employee")
 
     def get_rules(self) -> List[Tuple[str, ValidationRule]]:
         return [
@@ -102,7 +102,7 @@ class Q1Score(CreateTableProblem):
 
 class Q2Score(ModifyRecordProblem):
     def __init__(self):
-        super().__init__("q2_insert_employee_table", 5, "employee")
+        super().__init__(5, "employee")
 
     def order_by_col(self):
         return "emp_id"
@@ -112,7 +112,7 @@ class Q2Score(ModifyRecordProblem):
 
 class Q3Score(CreateTableProblem):
     def __init__(self):
-        super().__init__("q3_create_visit_log_table", 10, "visit_log")
+        super().__init__(10, "visit_log")
 
     def get_rules(self) -> List[Tuple[str, ValidationRule]]:
         return [
@@ -180,7 +180,7 @@ class Q3Score(CreateTableProblem):
 
 class Q4Score(ModifyRecordProblem):
     def __init__(self):
-        super().__init__("q4_insert_visit_log_table", 5, "visit_log")
+        super().__init__(5, "visit_log")
 
     def order_by_col(self):
         return "coalesce(visitor, ''), enter"
@@ -190,8 +190,8 @@ class Q4Score(ModifyRecordProblem):
 
 
 class Q5Score(SelectRecordProblem):
-    def __init__(self):
-        super().__init__("q5_employee_female", 10)
+    def __init__(self, actual: Any):
+        super().__init__(actual, 10)
 
     def sort_actual(self, actual: Any) -> Any:
         actual.sort(key=lambda e: e[0])
@@ -205,8 +205,8 @@ class Q5Score(SelectRecordProblem):
 
 
 class Q6Score(SelectRecordProblem):
-    def __init__(self):
-        super().__init__("q6_employee_male", 10)
+    def __init__(self, actual: Any):
+        super().__init__(actual, 10)
 
     def sort_actual(self, actual: Any) -> Any:
         return actual  # No sort
@@ -221,8 +221,8 @@ class Q6Score(SelectRecordProblem):
 
 # TODO: if student assume enter is varchar, may use substr instead of gt/lt/between
 class Q7Score(SelectRecordProblem):
-    def __init__(self):
-        super().__init__("q7_visit_log_cnt", 10)
+    def __init__(self, actual: Any):
+        super().__init__(actual, 10)
 
     def sort_actual(self, actual: Any) -> Any:
         return actual  # No sort
@@ -232,8 +232,8 @@ class Q7Score(SelectRecordProblem):
 
 
 class Q8Score(SelectRecordProblem):
-    def __init__(self):
-        super().__init__("q8_visit_log_group_by_purpose_cnt", 10)
+    def __init__(self, actual):
+        super().__init__(actual, 10)
 
     def sort_actual(self, actual: Any) -> Any:
         actual.sort(key=lambda e: e[0])  # sort by purpose
@@ -248,8 +248,8 @@ class Q8Score(SelectRecordProblem):
 
 
 class Q9Score(SelectRecordProblem):
-    def __init__(self):
-        super().__init__("q9_find_visit_employee", 10)
+    def __init__(self, actual):
+        super().__init__(actual, 10)
 
     def sort_actual(self, actual: Any) -> Any:
         actual.sort(key=lambda e: e[2])  # sort by emp_id
@@ -264,7 +264,7 @@ class Q9Score(SelectRecordProblem):
 
 class Q10Score(ModifyRecordProblem):
     def __init__(self):
-        super().__init__("q10_update_peach_position", 10, "employee", False)
+        super().__init__(10, "employee", False)
 
     def order_by_col(self):
         return "emp_id"
@@ -275,7 +275,7 @@ class Q10Score(ModifyRecordProblem):
 
 class Q11Score(ModifyRecordProblem):
     def __init__(self):
-        super().__init__("q11_delete_null_visit", 10, "visit_log", False)
+        super().__init__(10, "visit_log", False)
 
     def order_by_col(self):
         return "visitor"
