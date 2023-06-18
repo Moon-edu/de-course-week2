@@ -1,4 +1,6 @@
+import re
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import Tuple, List, Set, Any, Callable, Dict
 import logging
 from tests.datastructure import ColumnMeta
@@ -204,13 +206,23 @@ class ModifyRecordProblem(HwScore):
         # Remove padding spaces for char(n) column
         sanitized_actual = []
         for i, e in enumerate(actual):
-            sanitized_actual.append(tuple([x.strip() if isinstance(x, str) else x for x in e]))
+            sanitized_actual.append(tuple([_sanitize_column_value(x) for x in e]))
 
         if sanitized_actual == expected:
             return self.max_score
         else:
             logging.warning("Insert 후 결과 값이 예상 값이 아닙니다. Expected %s, Actual %s", expected, actual)
             raise Exception(f"Insert 후 결과 값이 예상 값이 아닙니다. Expected {expected}, Actual {actual}")
+
+def _sanitize_column_value(value: Any) -> Any:
+    if isinstance(value, str):
+        newV = value.strip()
+        if re.match(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$', newV):
+            return datetime.strptime(newV, '%Y-%m-%d %H:%M:%S')
+        else:
+            return newV
+    else:
+        return value
 
 
 class SelectRecordProblem(HwScore):
