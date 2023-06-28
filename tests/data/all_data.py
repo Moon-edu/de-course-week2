@@ -1,6 +1,8 @@
 from datetime import datetime
 
-
+"""
+채점을 위한 파일입니다. 수정하지 마세요.
+"""
 ALL_VISIT_LOG = [
             (None, datetime.strptime('2022-07-11 12:30:00', '%Y-%m-%d %H:%M:%S'),
              datetime.strptime('2022-07-11 14:45:00', '%Y-%m-%d %H:%M:%S'), 'meeting'),

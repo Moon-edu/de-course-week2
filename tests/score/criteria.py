@@ -2,7 +2,9 @@ from tests.score.traits import CreateTableProblem, ModifyRecordProblem, SelectRe
 from typing import List, Tuple, Any
 from tests.data.all_data import ALL_EMPLOYEE, ALL_VISIT_LOG
 
-
+"""
+채점을 위한 파일입니다. 수정하지 마세요.
+"""
 class Q1Score(CreateTableProblem):
     def __init__(self):
         super().__init__(10, "employee")

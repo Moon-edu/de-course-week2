@@ -4,7 +4,9 @@ import base64
 from tests.score.criteria import *
 from util.dbutil import *
 
-
+"""
+채점을 위한 파일입니다. 수정하지 마세요.
+"""
 def execute_sql_file(filename, return_result=False):
     with open(f"homework/{filename}.sql", "r") as f:
         query = f.read()
@@ -138,3 +140,4 @@ def test_delete_null_visit(drop_schema_if_exist, create_schema_if_not_exist, cre
 
     score = Q11Score().score()
     logging.info(f"Q11 Score: {score}")
+

@@ -6,7 +6,9 @@ import logging
 from tests.datastructure import ColumnMeta
 from tests.util import dbutil
 
-
+"""
+채점을 위한 파일입니다. 수정하지 마세요.
+"""
 class ValidationRule:
     """This class validate value with given rules in order
         rules: rule list to apply validation in order(order is matter)

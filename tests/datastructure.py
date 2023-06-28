@@ -1,5 +1,6 @@
-
-
+"""
+채점을 위한 파일입니다. 수정하지 마세요.
+"""
 class ColumnMeta:
     def __init__(self, name: str, nullable: bool, dtype: str, char_max_len: int, is_unique: bool, udt_name: str):
         self.name = name.lower()
