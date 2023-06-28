@@ -19,18 +19,17 @@ SCORE["test_find_visit_employee"]=10
 SCORE["test_update_peach_position"]=10
 SCORE["test_delete_null_visit"]=10
 
-
 while IFS= read -r line; do
   echo "Processing line: $line"
 
   IFS=',' read -r outcome nodeid <<< "$line"
 
-  TEST_ID=$(echo $nodeid | awk -F"::" '{print $2}')
-  if [ "$outcome" = "failed" ]; then
-    echo "Test $TEST_ID failed"
-  else
-    echo "Test $TEST_ID passed, Adding ${SCORE[TEST_ID]}"
+  TEST_ID=$(echo "$nodeid" | awk -F"::" '{print $2}')
+  if [ "$outcome" = "passed" ]; then
+    echo "Test $TEST_ID passed, Adding ${SCORE[$TEST_ID]}"
     TOTAL=$((TOTAL+${SCORE[$TEST_ID]}))
+  else
+    echo "Test $TEST_ID $outcome"
   fi
 done <<< "$OUTCOME"
 echo "Total score: $TOTAL"

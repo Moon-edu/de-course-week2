@@ -2,7 +2,7 @@ import logging
 import pytest
 import base64
 from tests.score.criteria import *
-from util.dbutil import *
+from tests.util.dbutil import *
 
 """
 채점을 위한 파일입니다. 수정하지 마세요.
