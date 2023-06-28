@@ -19,6 +19,7 @@ SCORE["test_find_visit_employee"]=10
 SCORE["test_update_peach_position"]=10
 SCORE["test_delete_null_visit"]=10
 
+TOTAL=0
 while IFS= read -r line; do
   echo "Processing line: $line"
 
