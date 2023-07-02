@@ -2,9 +2,9 @@ import os
 import psycopg
 from typing import Tuple
 
-DB_USER = "hw-checker"
-DB_PASSWORD = "check123"
-DB_NAME = "hw"
+DB_USER = "postgres"
+DB_PASSWORD = "postgres"
+DB_NAME = "postgres"
 DB_HOST = os.getenv("POSTGRES_HOST", "localhost")
 
 

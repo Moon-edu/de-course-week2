@@ -1,11 +1,11 @@
 version: '3'
 
 services:
-  postgres-hw:
+  postgres:
     image: postgres:14.5
     environment:
-      POSTGRES_USER: hw-checker
-      POSTGRES_PASSWORD: check123
-      POSTGRES_DB: hw
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
       - 5432:5432
