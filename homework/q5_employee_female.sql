@@ -3,3 +3,6 @@
 -- age  position
 -- 25	Associate marketer
 -- 45	Director
+
+select age, Position from employee
+where  Gender = 'Female';

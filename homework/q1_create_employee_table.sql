@@ -12,11 +12,11 @@
 
 create table employee(
     emp_id varchar(6) primary key,
-    Gender varchar(10) check(Gender IN('Male', 'Female', 'Others'))),
+    Gender varchar(10) not null check(Gender in ('Male', 'Female', 'Others')),
     name VARCHAR(20) NOT NULL,
     address VARCHAR(100),
     department INT CHECK(department < 100),
     manager VARCHAR(6),
-    age INT CHECK(age < 200) NOT NUL,
+    age INT CHECK(age < 200) NOT NULL,
     Position VARCHAR(30)
     );
