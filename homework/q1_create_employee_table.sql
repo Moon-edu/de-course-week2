@@ -10,7 +10,7 @@
 -- 8. Position은 최대 30자까지 올 수 있으며, null값이 허용이 됩니다.
 
 create Table employee (
-    emp_id varchar(6) not null, 
+    emp_id varchar(6) not null primary key Check(emp_id ~* '^[A-Z]{1}[0-9]{5}'),
     gender varchar(10) not null,
     name varchar(20) not null,
     address varchar(100),
