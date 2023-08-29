@@ -7,5 +7,5 @@
 -- Moon	    30	    Senior engineer
 
 select name , age, position from employee
-where age ='Male'
+where Gender ='Male'
 order by age desc;
