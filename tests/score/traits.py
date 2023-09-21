@@ -78,6 +78,20 @@ class CreateTableProblem(HwScore):
         """, ())))
         enum.sort()
         return enum
+        
+    def _get_primary_key_columns(self) -> Set[str]:
+        logging.info("Getting primary key columns")
+        pk = dbutil.fetch_all("""
+            SELECT c.column_name
+            FROM information_schema.table_constraints tc 
+            JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_name) 
+            JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema
+              AND tc.table_name = c.table_name AND ccu.column_name = c.column_name
+            WHERE constraint_type = 'PRIMARY KEY' and tc.table_name = %s
+        """, (self.table_name,))
+        pk_set = {u for u, in pk}
+        logging.info("Got primary key columns: %s", pk_set)
+        return pk_set
 
     def _get_unique_columns(self) -> Set[str]:
         logging.info("Getting unique columns")
@@ -102,6 +116,7 @@ class CreateTableProblem(HwScore):
 
     def _get_all_columns(self) -> Dict[str, ColumnMeta]:
         unique_set = self._get_unique_columns()
+        pk_set = self._get_primary_key_columns()
 
         logging.info("Getting all columns")
         columns = dbutil.fetch_all("""
@@ -116,7 +131,7 @@ class CreateTableProblem(HwScore):
             WHERE 
                table_name = %s;
         """, (self.table_name,))
-        columns_dict = {name: ColumnMeta(name, nullable, dtype, char_max_len, name in unique_set, udt_name)
+        columns_dict = {name: ColumnMeta(name, nullable, dtype, char_max_len, name in unique_set, udt_name, name in pk_set)
                         for name, nullable, dtype, char_max_len, udt_name in columns}
 
         logging.info("Got columns: %s", columns_dict)
