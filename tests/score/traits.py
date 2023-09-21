@@ -116,6 +116,7 @@ class CreateTableProblem(HwScore):
 
     def _get_all_columns(self) -> Dict[str, ColumnMeta]:
         unique_set = self._get_unique_columns()
+        pk_set = self._get_primary_key_columns()
 
         logging.info("Getting all columns")
         columns = dbutil.fetch_all("""
@@ -130,7 +131,7 @@ class CreateTableProblem(HwScore):
             WHERE 
                table_name = %s;
         """, (self.table_name,))
-        columns_dict = {name: ColumnMeta(name, nullable, dtype, char_max_len, name in unique_set, udt_name)
+        columns_dict = {name: ColumnMeta(name, nullable, dtype, char_max_len, name in unique_set, udt_name, name in pk_set)
                         for name, nullable, dtype, char_max_len, udt_name in columns}
 
         logging.info("Got columns: %s", columns_dict)
