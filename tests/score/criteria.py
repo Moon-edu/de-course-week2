@@ -14,7 +14,7 @@ class Q1Score(CreateTableProblem):
             ("emp_id", AndValidationRule([
                 lambda c: (c.name == "emp_id", "Column 명은 반드시 emp_id여야 합니다."),
                 lambda c: (not c.nullable, "emp_id는 null이 될 수 없습니다"),
-                lambda c: (c.is_unique, "emp_id는 Table내에서 고유한 값을 가져야 합니다."),
+                lambda c: (c.is_unique or c.is_pk, "emp_id는 Table내에서 고유한 값을 가져야 합니다."),
                 lambda c: ((c.dtype == "text" or (c.char_max_len and c.char_max_len >= 6)),
                            "emp_id는 고정 6자로 최소 6자 이상은 되어야 합니다."),
                 lambda c: (c.dtype in ["character", "character varying", "text"],
