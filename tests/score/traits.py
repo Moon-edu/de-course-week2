@@ -78,6 +78,20 @@ class CreateTableProblem(HwScore):
         """, ())))
         enum.sort()
         return enum
+        
+    def _get_primary_key_columns(self) -> Set[str]:
+        logging.info("Getting primary key columns")
+        pk = dbutil.fetch_all("""
+            SELECT c.column_name
+            FROM information_schema.table_constraints tc 
+            JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_name) 
+            JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema
+              AND tc.table_name = c.table_name AND ccu.column_name = c.column_name
+            WHERE constraint_type = 'PRIMARY KEY' and tc.table_name = %s
+        """, (self.table_name,))
+        pk_set = {u for u, in pk}
+        logging.info("Got primary key columns: %s", pk_set)
+        return pk_set
 
     def _get_unique_columns(self) -> Set[str]:
         logging.info("Getting unique columns")
