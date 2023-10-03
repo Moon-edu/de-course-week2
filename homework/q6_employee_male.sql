@@ -6,3 +6,9 @@
 -- Alex	    40	    Director
 -- Moon	    30	    Senior engineer
 
+
+--/*Q6*/
+ SELECT NAME, AGE, POSITION
+   FROM EMPLOYEE
+  WHERE GENDER= 'MALE'
+  ORDER BY AGE DESC;

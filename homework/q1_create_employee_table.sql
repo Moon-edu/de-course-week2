@@ -9,3 +9,14 @@
 -- 7. age는 숫자형으로 200미만  숫자로 null값이 올 수 없습니다.
 -- 8. Position은 최대 30자까지 올 수 있으며, null값이 허용이 됩니다.
 
+--/*Q1*/
+CREATE TABLE EMPLOYEE (
+	 EMP_ID     VARCHAR(6)  UNIQUE NOT NULL
+   , GENDER     VARCHAR(7)  NOT NULL
+   , NAME       VARCHAR(20) NOT NULL
+   , ADDRESS    VARCHAR(100)
+   , DEPARTMENT INT
+   , MANAGER    VARCHAR(6)
+   , AGE        INT NOT NULL
+   , POSITION   VARCHAR(30)
+   );

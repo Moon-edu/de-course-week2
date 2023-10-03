@@ -4,3 +4,8 @@
 -- purpose	    count
 -- meeting	    2
 -- interview	1
+
+-- /*Q8*/
+ SELECT PURPOSE, COUNT(*)
+   FROM VISIT_LOG
+  GROUP BY PURPOSE;

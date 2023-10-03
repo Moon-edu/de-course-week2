@@ -3,3 +3,8 @@
 -- age  position
 -- 25	Associate marketer
 -- 45	Director
+
+--/*Q5 */
+ SELECT AGE, POSITION
+   FROM EMPLOYEE
+  WHERE GENDER = 'FEMALE';

@@ -4,3 +4,11 @@
 -- John	1	        A00001
 -- 쿼리의 결과 순서는 상관 없습니다.
 -- Hint: join을 사용하세요
+
+
+--/*Q9*/
+ SELECT TA.NAME, TA.DEPARTMENT, TA.EMP_ID
+   FROM EMPLOYEE TA
+   JOIN VISIT_LOG TB
+     ON TA.EMP_ID = TB.VISITOR
+  WHERE TB.ENTER = '2022-07-11 09:00:00';
