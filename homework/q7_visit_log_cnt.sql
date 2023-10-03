@@ -3,6 +3,6 @@
 -- Hint: 집계 함수 count를 사용하세요
 
 --/*q7*/
- SELECT COUNT(*)
-   FROM VISIT_LOG
-  WHERE DATE_TRUNC('DAY', ENTER) = '2022-07-12';
+ select count(*)
+   from visit_log
+  where date_trunc('day', enter) = '2022-07-12';

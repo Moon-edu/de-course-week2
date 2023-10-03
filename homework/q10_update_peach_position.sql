@@ -3,6 +3,6 @@
 
 
 --/*Q10*/
-UPDATE EMPLOYEE SET POSITION = 'SENIOR ENGINEER'
- WHERE NAME = 'PEACH';
---SELECT * FROM EMPLOYEE WHERE NAME = 'PEACH';
+update employee set position = 'Senior engineer'
+ where name = 'Peach';
+--select * from employee where name = 'Peach';

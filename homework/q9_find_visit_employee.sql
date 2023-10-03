@@ -7,8 +7,8 @@
 
 
 --/*Q9*/
- SELECT TA.NAME, TA.DEPARTMENT, TA.EMP_ID
-   FROM EMPLOYEE TA
-   JOIN VISIT_LOG TB
-     ON TA.EMP_ID = TB.VISITOR
-  WHERE TB.ENTER = '2022-07-11 09:00:00';
+ select ta.name, ta.department, ta.emp_id
+   from employee ta
+   join visit_log tb
+     on ta.emp_id = tb.visitor
+  where tb.enter = '2022-07-11 09:00:00';

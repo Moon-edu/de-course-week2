@@ -10,13 +10,13 @@
 -- 8. Position은 최대 30자까지 올 수 있으며, null값이 허용이 됩니다.
 
 --/*Q1*/
-CREATE TABLE EMPLOYEE (
-	 EMP_ID     VARCHAR(6)  UNIQUE NOT NULL
-   , GENDER     VARCHAR(7)  NOT NULL
-   , NAME       VARCHAR(20) NOT NULL
-   , ADDRESS    VARCHAR(100)
-   , DEPARTMENT INT
-   , MANAGER    VARCHAR(6)
-   , AGE        INT NOT NULL
-   , POSITION   VARCHAR(30)
+create table employee (
+	 emp_id     varchar(6)  unique not null
+   , gender     varchar(7)  not null
+   , name       varchar(20) not null
+   , address    varchar(100)
+   , department int
+   , manager    varchar(6)
+   , age        int not null
+   , position   varchar(30)
    );

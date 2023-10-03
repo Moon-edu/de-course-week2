@@ -5,6 +5,6 @@
 -- 45	Director
 
 --/*Q5 */
- SELECT AGE, POSITION
-   FROM EMPLOYEE
-  WHERE GENDER = 'FEMALE';
+ select age, position
+   from employee
+  where gender = 'Female';

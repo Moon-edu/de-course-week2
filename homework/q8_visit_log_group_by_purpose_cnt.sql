@@ -6,6 +6,6 @@
 -- interview	1
 
 -- /*Q8*/
- SELECT PURPOSE, COUNT(*)
-   FROM VISIT_LOG
-  GROUP BY PURPOSE;
+ select purpose, count(*)
+   from visit_log
+  group by purpose;

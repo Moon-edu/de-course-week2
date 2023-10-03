@@ -5,9 +5,9 @@
 -- 3. purpose는 최대 50자까지 허용되며, null값이 허용됩니다.
 
 --/*Q3*/
-CREATE TABLE VISIT_LOG (
-	   VISITOR VARCHAR(6)
-	 , ENTER   TIMESTAMP  NOT NULL
-	 , OUT     TIMESTAMP
-	 , PURPOSE VARCHAR(50) )
+create table visit_log (
+	   visitor varchar(6)
+	 , enter   timestamp  not null
+	 , out     timestamp
+	 , purpose varchar(50) )
 	 ;

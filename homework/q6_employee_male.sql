@@ -8,7 +8,8 @@
 
 
 --/*Q6*/
- SELECT NAME, AGE, POSITION
-   FROM EMPLOYEE
-  WHERE GENDER= 'MALE'
-  ORDER BY AGE DESC;
+ select name, age, position
+   from employee
+  where gender= 'Male'
+  order by age desc;
+

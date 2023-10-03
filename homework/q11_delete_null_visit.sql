@@ -3,6 +3,6 @@
 -- Hint: delete를 사용하세요
 
 --/*Q11*/
-DELETE FROM VISIT_LOG
- WHERE VISITOR IS NULL;
---SELECT * FROM VISIT_LOG WHERE VISITOR IS NULL;
+delete from visit_log
+ where visitor is null;
+--select * from visit_log where visitor is null;
