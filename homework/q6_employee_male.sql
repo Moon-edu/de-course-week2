@@ -6,3 +6,4 @@
 -- Alex	    40	    Director
 -- Moon	    30	    Senior engineer
 
+select name, age, position from employee where gender='Male'order by age desc;

@@ -4,3 +4,4 @@
 -- John	1	        A00001
 -- 쿼리의 결과 순서는 상관 없습니다.
 -- Hint: join을 사용하세요
+select name, department, emp_id from visit_log, employee  where visit_log.enter='2022-07-11 09:00:00';
