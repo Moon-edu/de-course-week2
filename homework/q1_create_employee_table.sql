@@ -9,3 +9,15 @@
 -- 7. age는 숫자형으로 200미만  숫자로 null값이 올 수 없습니다.
 -- 8. Position은 최대 30자까지 올 수 있으며, null값이 허용이 됩니다.
 
+
+create table employee (
+    emp_id char(6) unique not null check(emp_id ~ '^[A-Z][0-9]{5}+$'),
+    gender varchar(6) not null check(gender in ('Male', 'Female', 'Others')),
+    name varchar(20) not null check(name ~ '^[A-Za-z]+$'),
+    address varchar(100) check(address ~ '^[\w\s,-/]+$'),
+    department int check(department < 100),
+    manager char(6) check(emp_id ~ '^[A-Z][0-9]{5}+$'),
+    age int not null check(age < 200),
+    position varchar(30)
+)
+;
