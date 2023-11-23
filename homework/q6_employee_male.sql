@@ -1,2 +1,1 @@
-select name, age, position from employee order by age desc;
-
+select name, age, position from employee where gender='Male' order by age desc;
