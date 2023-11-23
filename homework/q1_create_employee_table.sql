@@ -11,12 +11,12 @@
 
 
 create table employee (
-    emp_id char(6) unique not null check(emp_id ~ '^[A-Z][0-9]{5}+$'),
+    emp_id char(6) unique not null check(emp_id ~ '^[A-Z][0-9]{5}$'),
     gender varchar(6) not null check(gender in ('Male', 'Female', 'Others')),
-    name varchar(20) not null check(name ~ '^[A-Za-z]+$'),
-    address varchar(100) check(address ~ '^[\w\s,-/]+$'),
+    name varchar(20) not null check(name ~ '^[A-Za-z]$'),
+    address varchar(100) check(address ~ '^[\w\s,-/]$'),
     department int check(department < 100),
-    manager char(6) check(emp_id ~ '^[A-Z][0-9]{5}+$'),
+    manager char(6) check(emp_id ~ '^[A-Z][0-9]{5}$'),
     age int not null check(age < 200),
     position varchar(30)
 )

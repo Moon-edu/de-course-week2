@@ -5,7 +5,7 @@
 -- 3. purpose는 최대 50자까지 허용되며, null값이 허용됩니다.
 
 create table visit_log (
-      visitor char(6) check(emp_id ~ '^[A-Z][0-9]{5}+$'),
+      visitor char(6) check(visitor ~ '^[A-Z][0-9]{5}$'),
       enter timestamp not null,
       out timestamp,
       purpose varchar(50)
