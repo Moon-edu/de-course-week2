@@ -4,3 +4,9 @@
 -- John	1	        A00001
 -- 쿼리의 결과 순서는 상관 없습니다.
 -- Hint: join을 사용하세요
+
+
+SELECT name, department, emp_id
+FROM visit_log
+JOIN employee ON visit_log.emp_id = employee.emp_id
+WHERE DATE_FORMAT (enter, '%Y-%m-%d %H:%i:%s') = '2022-07-11 09:00:00';

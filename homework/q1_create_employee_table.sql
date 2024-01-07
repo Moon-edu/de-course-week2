@@ -9,3 +9,22 @@
 -- 7. age는 숫자형으로 200미만  숫자로 null값이 올 수 없습니다.
 -- 8. Position은 최대 30자까지 올 수 있으며, null값이 허용이 됩니다.
 
+CREATE TABLE employee (
+    emp_id CHAR(6) NOT NULL,
+    gender VARCHAR(6) NOT NULL,
+    name VARCHAR(20) NOT NULL,
+    address VARCHAR(100),
+    department INT(2),
+    manager CHAR(6),
+    age INT(3) NOT NULL,
+    position VARCHAR(30)
+);
+
+ALTER TABLE employee ADD CONSTRAINT emp_id_unique UNIQUE(emp_id);
+ALTER TABLE employee ADD CONSTRAINT emp_id_format CHECK (emp_id REGEXP '^[A-Z][0-9]{5}$');
+ALTER TABLE employee ADD CONSTRAINT gender_format CHECK (gender IN ('Male', 'Female', 'Others'));
+ALTER TABLE employee ADD CONSTRAINT name_format CHECK (name REGEXP '^[a-zA-Z]+$');
+ALTER TABLE employee ADD CONSTRAINT address_format CHECK (address REGEXP '^[a-zA-Z0-9,-\s]+$');
+ALTER TABLE employee ADD CONSTRAINT department_format CHECK (department < 100);
+ALTER TABLE employee ADD CONSTRAINT age_format CHECK (age < 200);
+ALTER TABLE employee ADD CONSTRAINT manager_format CHECK (manager IS NULL OR manager REGEXP '^[A-Z][0-9]{5}$');

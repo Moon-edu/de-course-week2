@@ -3,3 +3,5 @@
 -- age  position
 -- 25	Associate marketer
 -- 45	Director
+
+SELECT age, position FROM employee WHERE gender = 'Female';
