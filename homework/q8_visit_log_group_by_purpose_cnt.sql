@@ -4,3 +4,8 @@
 -- purpose	    count
 -- meeting	    2
 -- interview	1
+
+
+SELECT purpose, COUNT (*) AS no_of_visits
+FROM visit_log
+GROUP BY purpose;

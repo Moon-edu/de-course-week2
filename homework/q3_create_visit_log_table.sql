@@ -3,3 +3,12 @@
 -- 1. visitor는 null값이 허용되며, null일 경우 직원이 아닌 외부 손님으로 간주됩니다. 직원일 경우 직원의 ID가 기록됩니다
 -- 2. enter, out 는 출입 시간을 기록하는 데이터로 enter는 null이 될 수 없고, out은 null이 될 수 있습니다.
 -- 3. purpose는 최대 50자까지 허용되며, null값이 허용됩니다.
+
+CREATE TABLE visit_log (
+    visitor CHAR(6),
+    enter DATETIME NOT NULL,
+    out DATETIME,
+    purpose VARCHAR(50)
+);
+
+ALTER TABLE visit_log ADD CONSTRAINT visitor_format CHECK (visitor IS NULL OR visitor LIKE '^[A-Z][0-9]{5}$');
