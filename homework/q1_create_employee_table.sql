@@ -14,17 +14,19 @@ CREATE TABLE employee (
     gender VARCHAR(6) NOT NULL,
     name VARCHAR(20) NOT NULL,
     address VARCHAR(100),
-    department INT(2),
+    department INT,
     manager CHAR(6),
-    age INT(3) NOT NULL,
+    age INT NOT NULL,
     position VARCHAR(30)
 );
 
-ALTER TABLE employee ADD CONSTRAINT emp_id_unique UNIQUE(emp_id);
-ALTER TABLE employee ADD CONSTRAINT emp_id_format CHECK (emp_id REGEXP '^[A-Z][0-9]{5}$');
+ALTER TABLE employee ADD CONSTRAINT emp_id_unique UNIQUE (emp_id);
+ALTER TABLE employee ADD CONSTRAINT emp_id_format CHECK (emp_id LIKE '^[A-Z][0-9]{5}$');
 ALTER TABLE employee ADD CONSTRAINT gender_format CHECK (gender IN ('Male', 'Female', 'Others'));
-ALTER TABLE employee ADD CONSTRAINT name_format CHECK (name REGEXP '^[a-zA-Z]+$');
-ALTER TABLE employee ADD CONSTRAINT address_format CHECK (address REGEXP '^[a-zA-Z0-9,-\s]+$');
+ALTER TABLE employee ADD CONSTRAINT name_format CHECK (name LIKE '^[a-zA-Z]+$');
+ALTER TABLE employee ADD CONSTRAINT address_format CHECK (address LIKE '^[a-zA-Z0-9,-\s]+$');
 ALTER TABLE employee ADD CONSTRAINT department_format CHECK (department < 100);
 ALTER TABLE employee ADD CONSTRAINT age_format CHECK (age < 200);
-ALTER TABLE employee ADD CONSTRAINT manager_format CHECK (manager IS NULL OR manager REGEXP '^[A-Z][0-9]{5}$');
+ALTER TABLE employee ADD CONSTRAINT manager_format CHECK (manager IS NULL OR manager LIKE '^[A-Z][0-9]{5}$');
+
+

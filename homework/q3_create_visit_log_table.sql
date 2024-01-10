@@ -11,4 +11,4 @@ CREATE TABLE visit_log (
     purpose VARCHAR(50)
 );
 
-ALTER TABLE visit_log ADD CONSTRAINT visitor_format CHECK (visitor IS NULL OR visitor REGEXP '^[A-Z][0-9]{5}$');
+ALTER TABLE visit_log ADD CONSTRAINT visitor_format CHECK (visitor IS NULL OR visitor LIKE '^[A-Z][0-9]{5}$');
